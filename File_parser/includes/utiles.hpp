@@ -47,6 +47,7 @@ class Data {
     private:
         servers_map servers;
         std::map<int, Client*>  clientMap;
+        std::map<int, std::pair<std::string, std::string> > ipPorts;
     
     public:
         Data(servers_map servers);

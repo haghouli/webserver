@@ -65,7 +65,7 @@ void addSocketToEpoll(int epoll_fd, int sockfd)
         throw("epoll_ctl");
 }
 
-void handleIncomingConnection(int epoll_fd, int serversocket, struct sockaddr_in& host_addr, socklen_t& addr_len) 
+void handleIncomingConnection(Data *data, int epoll_fd, int serversocket, struct sockaddr_in& host_addr, socklen_t& addr_len) 
 {
     int clientsocket = accept(serversocket, (struct sockaddr *)&host_addr, &addr_len);
     if (clientsocket == -1) {
@@ -81,6 +81,11 @@ void handleIncomingConnection(int epoll_fd, int serversocket, struct sockaddr_in
         perror("epoll_ctl");
         exit(1);
     }
+    std::map<int, std::pair<std::string, std::string> > ipPorts = data->getIpPorts();
+    std::map<int, std::pair<std::string, std::string> >::iterator it;
+    it = ipPorts.lower_bound(serversocket);
+    if (it != ipPorts.end())
+        data->fillIpPorts(clientsocket, it->second.first, it->second.second);
     std::cout << "Accepted connection on socket." << std::endl;
 }
 
@@ -114,6 +119,10 @@ void handleOutgoingData(int socket, Data *data)
         delete it->second;
         data->getClientMap().erase(it);
         std::cout << "Closed connection on socket." << std::endl;
+        /******test***********/
+        std::map<int, std::pair<std::string, std::string> > map = data->getIpPorts();
+        std::map<int, std::pair<std::string, std::string> >::iterator it = map.lower_bound(socket);
+        std::cout << "ip: " << it->second.first << " port: " << it->second.second << std::endl;
     } 
     else
         close(socket);
@@ -145,6 +154,7 @@ void startTheServer(Data *data)
             
         }
         serversockets.push_back(serversocket);
+        data->fillIpPorts(serversocket, it->first.first, it->first.second);
         i++;
     }
     while (1) {
@@ -154,7 +164,7 @@ void startTheServer(Data *data)
             throw("epoll_wait");
         for (int i = 0; i < num_events; i++) {
             if (easyfind(serversockets, ev[i].data.fd) != serversockets.end())
-                handleIncomingConnection(epoll_fd, ev[i].data.fd, host_addr[i], addr_len[i]);
+                handleIncomingConnection(data, epoll_fd, ev[i].data.fd, host_addr[i], addr_len[i]);
             else if (ev[i].events & EPOLLIN) 
                 handleIncomingData(ev[i].data.fd, data);
             else if (ev[i].events & EPOLLOUT) 

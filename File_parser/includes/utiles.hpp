@@ -54,6 +54,8 @@ class Data {
         servers_map getServers();
         std::map<int, Client*> &getClientMap();
         server * findServer(std::pair<std::string, std::string> host_port, std::string server_name);
+        void     fillIpPorts(int key, const std::string& value1, const std::string& value2);
+        std::map<int, std::pair<std::string, std::string> > getIpPorts(); 
 };
 
 Data *         getConfig(int ac, char **av);

@@ -108,3 +108,12 @@ server * Data::findServer(std::pair<std::string, std::string> host_port, std::st
 
     return servers[host_port][0];
 }
+
+void Data::fillIpPorts(int key, const std::string& value1, const std::string& value2) {
+    ipPorts[key] = std::make_pair(value1, value2);
+}
+
+std::map<int, std::pair<std::string, std::string> > Data::getIpPorts() {
+    return ipPorts;
+}
+

@@ -113,7 +113,7 @@ void Data::fillIpPorts(int key, const std::string& value1, const std::string& va
     ipPorts[key] = std::make_pair(value1, value2);
 }
 
-std::map<int, std::pair<std::string, std::string> > Data::getIpPorts() {
+std::map<int, std::pair<std::string, std::string> > &Data::getIpPorts() {
     return ipPorts;
 }
 

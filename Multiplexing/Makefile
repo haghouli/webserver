@@ -1,5 +1,5 @@
 SANITIZER	= -fsanitize=address -g3
-CXX			= c++ -std=c++98 $(SANITIZER)
+CXX			= c++ -std=c++98 #$(SANITIZER)
 CPPFLGES 	= -Wall -Wextra -Werror
 
 NAME		= Multi

@@ -33,7 +33,10 @@ class server {
 class Client {
     public:
         std::map<std::string, std::string> request;
+        std::string body;
         std::string respond;
-        Client(std::string &str);
+        bool Respond;
+        bool Request;
+        Client();
         ~Client();
 };

@@ -3,6 +3,12 @@
 ## Overview
 The **Webserver** project at 1337 involves creating a simple HTTP web server from scratch. The goal is to develop a functional server that can handle HTTP requests, manage connections, serve static files, and respond with the appropriate HTTP responses. This project will teach essential concepts in networking, multi-threading, and HTTP, giving you a deeper understanding of how web servers work behind the scenes.
 
+
+## team members
+- haghouli(me)
+- mohcin tadlaoui [motadlaoui](https://github.com/motadlaoui).
+- ayoub aankote [Ankote](https://github.com/Ankote).
+
 ## Objective
 
 The goal of this project is to implement a simple web server capable of handling HTTP requests, routing to the appropriate static resources, and responding with HTTP status codes. The server should be able to:

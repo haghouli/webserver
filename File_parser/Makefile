@@ -1,6 +1,7 @@
 SANITIZER	= -fsanitize=address -g3
-CXX			= c++ -std=c++98 #$(SANITIZER)
-CPPFLGES 	= -Wall -Wextra -Werror
+CXX			= c++ -std=c++98
+CPPFLAGS 	= -Wall -Wextra -Werror
+
 
 NAME		= parse
 FILES		= ./files/main.cpp \
@@ -8,7 +9,8 @@ FILES		= ./files/main.cpp \
 			./files/tokenizer.cpp \
 			./files/collector.cpp \
 			./files/errors.cpp \
-			./files/validator.cpp
+			./files/validator.cpp \
+			./files/response.cpp
 
 O_FILES 	= $(FILES:.cpp=.o)
 

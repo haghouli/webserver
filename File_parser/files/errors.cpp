@@ -5,7 +5,7 @@ std::string synthax_error(std::string s) {
 }
 
 std::string not_allowed_error(std::string s) {
-    return "Directive " + s + " Not allow inside location Context";
+    return "Directive " + s + " Not allow";
 }
 
 std::string duplicate_error(std::string s) {

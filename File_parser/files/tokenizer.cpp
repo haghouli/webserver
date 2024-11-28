@@ -2,7 +2,7 @@
 
 tokenizer::tokenizer() {
    std::string dirvs = "listen server_name index root allow_methods client_max_body_size return error_page \
-   autoindex client_body_timeout uploads";
+   autoindex uploads alias include request_cgi_timeout";
 
    directives = splite(dirvs, " ");
 }
@@ -12,19 +12,41 @@ void   tokenizer::skip_spaces(std::string str, size_t & idx) {
         idx++;
 }
 
+void    skip_comments(std::string text, size_t & idx) {
+    if(text[idx] == '#') {
+        while (text[idx] != '\n') {
+            idx++;
+        }
+    }
+}
+
 void    tokenizer::get_others(std::string str,size_t & idx) {
     std::string word;
     size_t start_idx = idx;
     t_token token;
 
-    while(str[idx] != '\n' && str[idx] != ' ' && str[idx] != '\t' &&
-    str[idx] != ';' && str[idx] != '{' && str[idx] != '}' && str[idx])
-        word += str[idx++];
-    
+    if(str[idx] == '\"') {
+        word += '\"';
+        idx++;
+        while(str[idx] != '\"' && str[idx] != '\0') {
+            word += str[idx++];
+        }
+        if(str[idx] == '\0')
+            throw "Synthax error";
+        if(str[idx++] == '\"')
+            word += "\"";
+    } else {
+        while(str[idx] != '\n' && str[idx] != ' ' && str[idx] != '\t' &&
+        str[idx] != ';' && str[idx] != '{' && str[idx] != '}' && str[idx]
+        && str[idx] != '\"' )
+            word += str[idx++];   
+    }
     token.index = start_idx;
     token.value = word;
 
-    if(word == "server")
+    if(word.empty())
+        return;
+    else if(word == "server")
         token.type = CONTEXT_SERVER;
     else if(word == "location")
         token.type = CONTEXT_LOCATION;
@@ -34,9 +56,12 @@ void    tokenizer::get_others(std::string str,size_t & idx) {
         token.type = CONTEXT_TYPES;
     else if(find(directives.begin(), directives.end(), word) != directives.end())
         token.type = DIRECTIVE;
-    else
+    else {
+        token.value = strTrim(token.value, "\"");
+        if(token.value.empty())
+            throw "Empty argument";
         token.type = STRING;
-    
+    }
     tokens.push_back(token);
 }
 
@@ -54,6 +79,7 @@ std::vector<t_token> tokenizer::generate_tokens(std::string text) {
     size_t i = 0;
     while(text[i]) {
         skip_spaces(text, i);
+        skip_comments(text, i);
         switch (text[i])    
         {
             case '{': save_token("{", LBRACE, i++); break;
@@ -66,15 +92,4 @@ std::vector<t_token> tokenizer::generate_tokens(std::string text) {
         }
     }
     return tokens;
-}
-
-/******************************* FOR TEST ***************************/
-
-void    tokenizer::print_tokens(std::vector<t_token> tokens) {
-    std::vector<t_token>::iterator it = tokens.begin();
-    for(; it != tokens.end(); it++) {
-        std::cout << "type -> " << it->type;
-        std::cout << " value -> " << it->value;
-        std::cout << " index -> " << it->index << std::endl;
-    }
 }

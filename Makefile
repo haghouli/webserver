@@ -1,23 +1,54 @@
-
 SANITIZER	= -fsanitize=address -g3
-CXX			= c++ -std=c++98 #$(SANITIZER)
-CPPFLGES 	= -Wall -Wextra -Werror
+CXX			= c++ -std=c++98
+CPPFLAGS	= -Wall -Wextra -Werror
 
-NAME		= webserver
+NAME		= webserv
+
+FILES = Methodes/srcs/boundaryUtils.cpp\
+  		Methodes/srcs/delete.cpp\
+		Methodes/srcs/get.cpp\
+    	Methodes/srcs/parceChuncked.cpp\
+	  	Methodes/srcs/postBoundary.cpp\
+	    Methodes/srcs/Post.cpp\
+		Methodes/srcs/utilsPost.cpp\
+		cgi/cgi.cpp\
+		File_parser/files/collector.cpp\
+  		File_parser/files/errors.cpp\
+		File_parser/files/main.cpp\
+		File_parser/files/response.cpp\
+		File_parser/files/tokenizer.cpp\
+		File_parser/files/utiles.cpp\
+		File_parser/files/validator.cpp\
+		Multiplexing/srcs/Client.cpp\
+		Multiplexing/srcs/Multi.cpp\
+		Multiplexing/srcs/Request.cpp\
+		Multiplexing/srcs/Server.cpp\
+		main.cpp
 
 
-all: makeparse makeMulti
-	$(CXX) main.cpp ./File_parser/parse ./Multiplexing/Multi -o $(NAME)
+HEADERS = Methodes/includes/delete.hpp\
+		Methodes/includes/get.hpp\
+	    Methodes/includes/Post.hpp\
+		cgi/cgi.hpp\
+		File_parser/includes/collector.hpp\
+  		File_parser/includes/errors.hpp\
+		File_parser/includes/response.hpp\
+		File_parser/includes/tokenizer.hpp\
+		File_parser/includes/utiles.hpp\
+		File_parser/includes/validator.hpp\
+		Multiplexing/includes/Multi.hpp
 
-makeparse:
-	make -C ./File_parser
+OBJ_FILES 	= $(FILES:.cpp=.o)
 
-makeMulti:
-	make -C ./Multiplexing
+all : $(NAME)
 
-fclean:
-	make fclean -C ./File_parser 
-	make fclean -C ./Multiplexing
+$(NAME) : $(OBJ_FILES) $(HEADERS)
+	$(CXX) $(CPPFLAGS) $(OBJ_FILES) -o $(NAME)
+
+clean:
+	rm -rf $(OBJ_FILES)
+
+fclean: clean
 	rm -rf $(NAME)
 
 re: fclean all

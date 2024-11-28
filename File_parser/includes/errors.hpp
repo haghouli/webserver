@@ -1,7 +1,7 @@
 #ifndef ERROES_HPP
 #define ERROES_HPP
 
-#include "../includes/utiles.hpp"
+#include "./header.hpp"
 
 std::string     synthax_error(std::string s);
 std::string     duplicate_error(std::string s);
